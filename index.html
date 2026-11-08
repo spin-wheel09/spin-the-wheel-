@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#21150f">
+
+  <title>Rajya Rooftop | Spin & Win</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="texture"></div>
+
+  <header class="navbar">
+    <a class="brand" href="#">
+      <span class="brand-symbol">✦</span>
+      <div>
+        <h1>RAJYA ROOFTOP</h1>
+        <p>CAFE • FOOD • EXPERIENCE</p>
+      </div>
+    </a>
+
+    <div class="opening-badge">✦ GRAND OPENING ✦</div>
+  </header>
+
+  <main class="hero">
+
+    <div class="eyebrow">
+      <span></span> A LITTLE TREAT FOR YOU <span></span>
+    </div>
+
+    <h2>
+      SPIN THE WHEEL.<br>
+      <em>WIN SOMETHING SPECIAL.</em>
+    </h2>
+
+    <p class="description">
+      Celebrate our grand opening with us!
+      Give the wheel a spin and discover your
+      special surprise at Rajya Rooftop.
+    </p>
+
+    <div class="wheel-area">
+
+      <div class="wheel-glow"></div>
+      <div class="pointer"></div>
+
+      <div class="wheel-frame">
+        <canvas id="wheel" width="900" height="900"></canvas>
+
+        <div class="wheel-center">
+          <span>RAJYA</span>
+          <small>SPIN & WIN</small>
+        </div>
+      </div>
+
+    </div>
+
+    <button id="spinBtn" class="spin-button">
+      <span>✦</span> SPIN NOW <span>✦</span>
+    </button>
+
+    <p class="spin-note">
+      ONE SPIN • ONE SURPRISE • ENDLESS HAPPINESS
+    </p>
+
+    <section class="prize-section">
+      <p class="section-label">THE GRAND OPENING TREATS</p>
+      <h3>YOUR CHANCES TO WIN</h3>
+
+      <div class="prize-list">
+        <div class="prize-item">
+          <span class="color-dot dot-gold"></span>
+          <span>10% OFF</span>
+          <strong>1%</strong>
+        </div>
+
+        <div class="prize-item">
+          <span class="color-dot dot-cream"></span>
+          <span>Better Luck Next Time</span>
+          <strong>40%</strong>
+        </div>
+
+        <div class="prize-item">
+          <span class="color-dot dot-brown"></span>
+          <span>Free Dessert</span>
+          <strong>13%</strong>
+        </div>
+
+        <div class="prize-item">
+          <span class="color-dot dot-orange"></span>
+          <span>250 ml Coke / Sprite</span>
+          <strong>13%</strong>
+        </div>
+
+        <div class="prize-item">
+          <span class="color-dot dot-dark"></span>
+          <span>Re-spin</span>
+          <strong>33%</strong>
+        </div>
+      </div>
+    </section>
+
+    <div class="bottom-decoration">
+      <span>GOOD FOOD</span>
+      <i>✦</i>
+      <span>GREAT VIBES</span>
+      <i>✦</i>
+      <span>HAPPY MOMENTS</span>
+    </div>
+
+  </main>
+
+  <!-- WINNER POPUP -->
+
+  <div class="modal" id="winnerModal">
+    <div class="modal-card">
+
+      <div class="modal-icon" id="modalIcon">🎉</div>
+
+      <p class="modal-overline">RAJYA ROOFTOP PRESENTS</p>
+
+      <h2 id="modalTitle">CONGRATULATIONS!</h2>
+
+      <p class="modal-description" id="modalDescription">
+        You have won something special!
+      </p>
+
+      <div class="prize-box">
+        <span>YOUR RESULT</span>
+        <h3 id="prizeName">FREE DESSERT</h3>
+      </div>
+
+      <p class="claim-text" id="claimText">
+        Show this screen to our staff.
+      </p>
+
+      <button class="claim-button" id="modalButton">
+        CLAIM MY PRIZE
+      </button>
+
+      <p class="modal-footer">
+        THANK YOU FOR CELEBRATING WITH US ❤️
+      </p>
+
+    </div>
+  </div>
+
+  <footer>
+    <h3>RAJYA ROOFTOP</h3>
+    <p>MADE WITH LOVE • GRAND OPENING SPECIAL</p>
+    <span>© 2026 RAJYA ROOFTOP</span>
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
