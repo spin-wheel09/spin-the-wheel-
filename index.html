@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#21150f">
+  <meta name="description" content="Celebrate the grand opening of Rajya Rooftop. Spin the wheel to win special treats!">
 
   <title>Rajya Rooftop | Spin & Win</title>
 
@@ -11,155 +12,194 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
-</head>
+  <style>
+    /* =========================================
+       CSS VARIABLES & RESET
+       ========================================= */
+    :root {
+      --clr-bg: #21150f;
+      --clr-text: #fdfbf7;
+      --clr-gold: #c5a059;
+      --clr-gold-dim: rgba(197, 160, 89, 0.2);
+      --clr-cream: #eaddc5;
+      --clr-brown: #5c3c27;
+      --clr-orange: #d96c3a;
+      --clr-dark: #120b08;
+      
+      --font-heading: 'Cormorant Garamond', serif;
+      --font-body: 'DM Sans', sans-serif;
+      
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-<body>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  <div class="texture"></div>
+    body {
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-  <header class="navbar">
-    <a class="brand" href="#">
-      <span class="brand-symbol">✦</span>
-      <div>
-        <h1>RAJYA ROOFTOP</h1>
-        <p>CAFE • FOOD • EXPERIENCE</p>
-      </div>
-    </a>
+    /* Subtle noise texture overlay */
+    .texture {
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
 
-    <div class="opening-badge">✦ GRAND OPENING ✦</div>
-  </header>
+    /* =========================================
+       LAYOUT & TYPOGRAPHY
+       ========================================= */
+    h1, h2, h3, .brand-symbol {
+      font-family: var(--font-heading);
+      font-weight: 700;
+    }
 
-  <main class="hero">
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid var(--clr-gold-dim);
+    }
 
-    <div class="eyebrow">
-      <span></span> A LITTLE TREAT FOR YOU <span></span>
-    </div>
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--clr-gold);
+    }
 
-    <h2>
-      SPIN THE WHEEL.<br>
-      <em>WIN SOMETHING SPECIAL.</em>
-    </h2>
+    .brand h1 {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
 
-    <p class="description">
-      Celebrate our grand opening with us!
-      Give the wheel a spin and discover your
-      special surprise at Rajya Rooftop.
-    </p>
+    .brand p {
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--clr-cream);
+      margin-top: 0.25rem;
+    }
 
-    <div class="wheel-area">
+    .brand-symbol {
+      font-size: 2rem;
+    }
 
-      <div class="wheel-glow"></div>
-      <div class="pointer"></div>
+    .opening-badge {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--clr-bg);
+      background: var(--clr-gold);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: 700;
+    }
 
-      <div class="wheel-frame">
-        <canvas id="wheel" width="900" height="900"></canvas>
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 1rem;
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-        <div class="wheel-center">
-          <span>RAJYA</span>
-          <small>SPIN & WIN</small>
-        </div>
-      </div>
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--clr-gold);
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      margin-bottom: 1.5rem;
+    }
 
-    </div>
+    .eyebrow span {
+      height: 1px;
+      width: 40px;
+      background: var(--clr-gold);
+    }
 
-    <button id="spinBtn" class="spin-button">
-      <span>✦</span> SPIN NOW <span>✦</span>
-    </button>
+    .hero h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
 
-    <p class="spin-note">
-      ONE SPIN • ONE SURPRISE • ENDLESS HAPPINESS
-    </p>
+    .hero h2 em {
+      color: var(--clr-gold);
+      font-style: normal;
+    }
 
-    <section class="prize-section">
-      <p class="section-label">THE GRAND OPENING TREATS</p>
-      <h3>YOUR CHANCES TO WIN</h3>
+    .description {
+      color: var(--clr-cream);
+      max-width: 400px;
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+    }
 
-      <div class="prize-list">
-        <div class="prize-item">
-          <span class="color-dot dot-gold"></span>
-          <span>10% OFF</span>
-          <strong>1%</strong>
-        </div>
+    /* =========================================
+       WHEEL COMPONENT
+       ========================================= */
+    .wheel-area {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1;
+      margin: 0 auto 3rem;
+    }
 
-        <div class="prize-item">
-          <span class="color-dot dot-cream"></span>
-          <span>Better Luck Next Time</span>
-          <strong>40%</strong>
-        </div>
+    .wheel-glow {
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle, var(--clr-gold-dim) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
 
-        <div class="prize-item">
-          <span class="color-dot dot-brown"></span>
-          <span>Free Dessert</span>
-          <strong>13%</strong>
-        </div>
+    .pointer {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 30px solid var(--clr-text);
+      z-index: 5;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
+    }
 
-        <div class="prize-item">
-          <span class="color-dot dot-orange"></span>
-          <span>250 ml Coke / Sprite</span>
-          <strong>13%</strong>
-        </div>
+    .wheel-frame {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid var(--clr-gold);
+      position: relative;
+      box-shadow: 0 0 30px rgba(197, 160, 89, 0.3), inset 0 0 20px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
 
-        <div class="prize-item">
-          <span class="color-dot dot-dark"></span>
-          <span>Re-spin</span>
-          <strong>33%</strong>
-        </div>
-      </div>
-    </section>
-
-    <div class="bottom-decoration">
-      <span>GOOD FOOD</span>
-      <i>✦</i>
-      <span>GREAT VIBES</span>
-      <i>✦</i>
-      <span>HAPPY MOMENTS</span>
-    </div>
-
-  </main>
-
-  <!-- WINNER POPUP -->
-
-  <div class="modal" id="winnerModal">
-    <div class="modal-card">
-
-      <div class="modal-icon" id="modalIcon">🎉</div>
-
-      <p class="modal-overline">RAJYA ROOFTOP PRESENTS</p>
-
-      <h2 id="modalTitle">CONGRATULATIONS!</h2>
-
-      <p class="modal-description" id="modalDescription">
-        You have won something special!
-      </p>
-
-      <div class="prize-box">
-        <span>YOUR RESULT</span>
-        <h3 id="prizeName">FREE DESSERT</h3>
-      </div>
-
-      <p class="claim-text" id="claimText">
-        Show this screen to our staff.
-      </p>
-
-      <button class="claim-button" id="modalButton">
-        CLAIM MY PRIZE
-      </button>
-
-      <p class="modal-footer">
-        THANK YOU FOR CELEBRATING WITH US ❤️
-      </p>
-
-    </div>
-  </div>
-
-  <footer>
-    <h3>RAJYA ROOFTOP</h3>
-    <p>MADE WITH LOVE • GRAND OPENING SPECIAL</p>
-    <span>© 2026 RAJYA ROOFTOP</span>
-  </footer>
-
-  <script src="script.js"></script>
-
-</body>
-</html>
+    canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      transition: transform 5
