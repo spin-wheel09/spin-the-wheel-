@@ -1,41 +1,72 @@
+/* =========================================
+   DESIGN TOKENS (VARIABLES)
+   ========================================= */
 :root {
-  --dark: #21150f;
-  --brown: #392419;
-  --coffee: #69432c;
-  --gold: #c69a5c;
-  --cream: #f7eddf;
-  --light: #fff9ef;
-  --muted: #b8a18a;
+  /* Core Brand Colors */
+  --clr-dark: #21150f;
+  --clr-brown: #392419;
+  --clr-coffee: #69432c;
+  --clr-gold: #c69a5c;
+  --clr-cream: #f7eddf;
+  --clr-light: #fff9ef;
+  --clr-muted: #b8a18a;
+
+  /* Prize Segment Colors */
+  --prize-gold: #e6b96e;
+  --prize-cream: #f5dfbd;
+  --prize-brown: #75452c;
+  --prize-orange: #a96535;
+  --prize-dark: #8c5936;
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Effects & Spacing */
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius-lg: 25px;
+  --border-radius-md: 20px;
+  --border-radius-sm: 15px;
 }
 
-* {
+/* =========================================
+   RESET & BASE STYLES
+   ========================================= */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  background: var(--dark);
-  color: var(--cream);
-  font-family: 'DM Sans', sans-serif;
+  background-color: var(--clr-dark);
+  color: var(--clr-cream);
+  font-family: var(--font-body);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Premium grain texture */
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+}
 
+/* Premium Grain Texture */
 .texture {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: .13;
-
+  opacity: 0.13;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
 }
 
-/* Navigation */
-
+/* =========================================
+   NAVIGATION
+   ========================================= */
 .navbar {
   position: relative;
   z-index: 2;
@@ -43,7 +74,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 24px 8%;
-  border-bottom: 1px solid #ffffff17;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
 }
 
 .brand {
@@ -51,16 +82,16 @@ body {
   align-items: center;
   gap: 13px;
   text-decoration: none;
-  color: var(--cream);
+  color: var(--clr-cream);
 }
 
 .brand-symbol {
   font-size: 35px;
-  color: var(--gold);
+  color: var(--clr-gold);
 }
 
 .brand h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 26px;
   letter-spacing: 3px;
 }
@@ -68,34 +99,29 @@ body {
 .brand p {
   font-size: 9px;
   letter-spacing: 3px;
-  color: var(--muted);
+  color: var(--clr-muted);
   margin-top: 4px;
 }
 
 .opening-badge {
-  border: 1px solid #c69a5c77;
-  color: var(--gold);
+  border: 1px solid rgba(198, 154, 92, 0.47); /* --clr-gold with opacity */
+  color: var(--clr-gold);
   padding: 10px 17px;
   border-radius: 30px;
   font-size: 10px;
   letter-spacing: 2px;
 }
 
-/* Main */
-
+/* =========================================
+   HERO SECTION
+   ========================================= */
 .hero {
   position: relative;
   z-index: 1;
   min-height: 850px;
   padding: 75px 20px 50px;
   text-align: center;
-
-  background:
-    radial-gradient(
-      ellipse at center,
-      #60432a45,
-      transparent 65%
-    );
+  background: radial-gradient(ellipse at center, rgba(96, 67, 42, 0.27), transparent 65%);
 }
 
 .eyebrow {
@@ -105,18 +131,18 @@ body {
   gap: 12px;
   font-size: 10px;
   letter-spacing: 4px;
-  color: var(--gold);
+  color: var(--clr-gold);
   margin-bottom: 22px;
 }
 
 .eyebrow span {
   width: 28px;
   height: 1px;
-  background: var(--gold);
+  background-color: var(--clr-gold);
 }
 
 .hero h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: clamp(35px, 7vw, 65px);
   line-height: 1.08;
   font-weight: 600;
@@ -124,19 +150,21 @@ body {
 }
 
 .hero h2 em {
-  color: var(--gold);
+  color: var(--clr-gold);
+  font-style: normal;
 }
 
 .description {
-  color: var(--muted);
+  color: var(--clr-muted);
   max-width: 430px;
   margin: 20px auto 35px;
   line-height: 1.8;
   font-size: 14px;
 }
 
-/* Wheel */
-
+/* =========================================
+   WHEEL COMPONENT
+   ========================================= */
 .wheel-area {
   position: relative;
   width: min(85vw, 440px);
@@ -147,7 +175,7 @@ body {
 .wheel-glow {
   position: absolute;
   inset: -25px;
-  background: #c69a5c1c;
+  background: rgba(198, 154, 92, 0.11);
   filter: blur(45px);
   border-radius: 50%;
 }
@@ -155,13 +183,11 @@ body {
 .wheel-frame {
   position: absolute;
   inset: 0;
-  border: 10px solid var(--gold);
+  border: 10px solid var(--clr-gold);
   border-radius: 50%;
   padding: 5px;
   background: linear-gradient(145deg, #f4d7a7, #744a2a);
-  box-shadow:
-    0 0 0 4px #fff0d91c,
-    0 20px 60px #0008;
+  box-shadow: 0 0 0 4px rgba(255, 240, 217, 0.11), 0 20px 60px rgba(0, 0, 0, 0.53);
 }
 
 canvas {
@@ -181,8 +207,8 @@ canvas {
   height: 0;
   border-left: 22px solid transparent;
   border-right: 22px solid transparent;
-  border-top: 55px solid #e6b96e;
-  filter: drop-shadow(0 5px 5px #0008);
+  border-top: 55px solid var(--prize-gold);
+  filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.53));
 }
 
 .wheel-center {
@@ -193,19 +219,19 @@ canvas {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: radial-gradient(circle, #fff4e2, #c69a5c);
+  background: radial-gradient(circle, #fff4e2, var(--clr-gold));
   border: 6px solid #80532f;
-  color: #392419;
+  color: var(--clr-brown);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 18px #0007;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.47);
   z-index: 3;
 }
 
 .wheel-center span {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-weight: bold;
   font-size: 21px;
   letter-spacing: 1px;
@@ -217,8 +243,9 @@ canvas {
   margin-top: 3px;
 }
 
-/* Spin button */
-
+/* =========================================
+   BUTTONS & CONTROLS
+   ========================================= */
 .spin-button,
 .claim-button {
   cursor: pointer;
@@ -230,18 +257,25 @@ canvas {
   padding: 19px 55px;
   border-radius: 50px;
   font-size: 14px;
-  box-shadow: 0 8px 30px #c69a5c30;
-  transition: .3s ease;
+  box-shadow: 0 8px 30px rgba(198, 154, 92, 0.19);
+  transition: var(--transition);
 }
 
-.spin-button:hover,
-.claim-button:hover {
+.spin-button:hover:not(:disabled),
+.claim-button:hover:not(:disabled) {
   transform: translateY(-4px);
-  box-shadow: 0 12px 35px #c69a5c50;
+  box-shadow: 0 12px 35px rgba(198, 154, 92, 0.31);
 }
 
-.spin-button:disabled {
-  opacity: .5;
+.spin-button:focus-visible,
+.claim-button:focus-visible {
+  outline: 3px solid var(--clr-cream);
+  outline-offset: 4px;
+}
+
+.spin-button:disabled,
+.claim-button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
@@ -253,15 +287,16 @@ canvas {
   margin-top: 20px;
 }
 
-/* Prize list */
-
+/* =========================================
+   PRIZE LIST SECTION
+   ========================================= */
 .prize-section {
   max-width: 450px;
   margin: 75px auto 0;
   padding: 30px 25px;
-  border: 1px solid #c69a5c44;
-  border-radius: 20px;
-  background: #ffffff08;
+  border: 1px solid rgba(198, 154, 92, 0.27);
+  border-radius: var(--border-radius-md);
+  background: rgba(255, 255, 255, 0.03);
   text-align: left;
 }
 
@@ -269,12 +304,12 @@ canvas {
   text-align: center;
   font-size: 9px;
   letter-spacing: 3px;
-  color: var(--gold);
+  color: var(--clr-gold);
 }
 
 .prize-section h3 {
   text-align: center;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 27px;
   margin: 8px 0 22px;
 }
@@ -295,7 +330,7 @@ canvas {
 
 .prize-item strong {
   margin-left: auto;
-  color: var(--gold);
+  color: var(--clr-gold);
 }
 
 .color-dot {
@@ -305,14 +340,15 @@ canvas {
   flex-shrink: 0;
 }
 
-.dot-gold { background: #e6b96e; }
-.dot-cream { background: #f5dfbd; }
-.dot-brown { background: #75452c; }
-.dot-orange { background: #a96535; }
-.dot-dark { background: #8c5936; }
+.dot-gold { background-color: var(--prize-gold); }
+.dot-cream { background-color: var(--prize-cream); }
+.dot-brown { background-color: var(--prize-brown); }
+.dot-orange { background-color: var(--prize-orange); }
+.dot-dark { background-color: var(--prize-dark); }
 
-/* Bottom */
-
+/* =========================================
+   FOOTER & DECORATION
+   ========================================= */
 .bottom-decoration {
   display: flex;
   justify-content: center;
@@ -321,15 +357,40 @@ canvas {
   margin-top: 75px;
   font-size: 10px;
   letter-spacing: 3px;
-  color: var(--gold);
+  color: var(--clr-gold);
 }
 
 .bottom-decoration i {
   font-style: normal;
 }
 
-/* Winner modal */
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
 
+footer h3 {
+  font-family: var(--font-heading);
+  letter-spacing: 3px;
+  font-size: 22px;
+}
+
+footer p {
+  color: var(--clr-gold);
+  letter-spacing: 2px;
+  font-size: 9px;
+  margin: 9px 0;
+}
+
+footer span {
+  color: var(--clr-muted);
+  font-size: 10px;
+}
+
+/* =========================================
+   MODAL (POPUP)
+   ========================================= */
 .modal {
   position: fixed;
   inset: 0;
@@ -338,11 +399,13 @@ canvas {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: #100a07df;
+  background: rgba(16, 10, 7, 0.87);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.modal.show {
+.modal.show,
+.modal.active { /* Supported both based on JS versions */
   display: flex;
 }
 
@@ -351,19 +414,18 @@ canvas {
   max-width: 400px;
   text-align: center;
   padding: 40px 28px;
-  border: 1px solid #c69a5c88;
-  border-radius: 25px;
+  border: 1px solid rgba(198, 154, 92, 0.53);
+  border-radius: var(--border-radius-lg);
   background: linear-gradient(145deg, #49301f, #25170f);
-  box-shadow: 0 20px 70px #0009;
-  animation: pop .4s ease;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.6);
+  animation: popModal 0.4s cubic-bezier(0.17, 0.67, 0.12, 0.99) forwards;
 }
 
-@keyframes pop {
+@keyframes popModal {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(.9);
+    transform: translateY(30px) scale(0.9);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -376,28 +438,28 @@ canvas {
 }
 
 .modal-overline {
-  color: var(--gold);
+  color: var(--clr-gold);
   letter-spacing: 3px;
   font-size: 9px;
   margin-bottom: 12px;
 }
 
 .modal-card h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 35px;
-  color: var(--cream);
+  color: var(--clr-cream);
 }
 
 .modal-description {
-  color: var(--muted);
+  color: var(--clr-muted);
   font-size: 13px;
   margin-top: 10px;
 }
 
 .prize-box {
-  background: #c69a5c16;
-  border: 1px solid #c69a5c55;
-  border-radius: 15px;
+  background: rgba(198, 154, 92, 0.09);
+  border: 1px solid rgba(198, 154, 92, 0.33);
+  border-radius: var(--border-radius-sm);
   padding: 22px 10px;
   margin: 25px 0;
 }
@@ -405,18 +467,18 @@ canvas {
 .prize-box span {
   font-size: 9px;
   letter-spacing: 3px;
-  color: var(--gold);
+  color: var(--clr-gold);
 }
 
 .prize-box h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   font-size: 30px;
   margin-top: 8px;
   color: #f1d3a1;
 }
 
 .claim-text {
-  color: var(--muted);
+  color: var(--clr-muted);
   font-size: 12px;
   line-height: 1.6;
 }
@@ -429,104 +491,80 @@ canvas {
 }
 
 .modal-footer {
-  color: var(--gold);
+  color: var(--clr-gold);
   font-size: 8px;
   letter-spacing: 2px;
   margin-top: 25px;
 }
 
-/* Footer */
-
-footer {
-  text-align: center;
-  padding: 30px 15px;
-  border-top: 1px solid #ffffff17;
-}
-
-footer h3 {
-  font-family: 'Cormorant Garamond', serif;
-  letter-spacing: 3px;
-  font-size: 22px;
-}
-
-footer p {
-  color: var(--gold);
-  letter-spacing: 2px;
-  font-size: 9px;
-  margin: 9px 0;
-}
-
-footer span {
-  color: var(--muted);
-  font-size: 10px;
-}
-
-/* Mobile */
-
+/* =========================================
+   MEDIA QUERIES (RESPONSIVE)
+   ========================================= */
 @media (max-width: 600px) {
-
   .navbar {
     padding: 18px 15px;
   }
-
+  
   .brand h1 {
     font-size: 19px;
   }
-
+  
   .brand p {
     font-size: 7px;
   }
-
+  
   .opening-badge {
     padding: 8px;
     font-size: 8px;
     letter-spacing: 1px;
   }
-
+  
   .hero {
     padding-top: 55px;
   }
-
+  
   .hero h2 {
     font-size: 39px;
   }
-
+  
   .description {
     font-size: 12px;
   }
-
+  
   .wheel-area {
     width: min(86vw, 370px);
   }
-
+  
   .wheel-center {
     width: 78px;
     height: 78px;
   }
-
+  
   .wheel-center span {
     font-size: 17px;
   }
-
+  
   .spin-button {
     padding: 17px 35px;
   }
-
+  
   .bottom-decoration {
     gap: 9px;
     font-size: 8px;
     letter-spacing: 1px;
   }
-
+  
   .prize-section {
     padding: 25px 17px;
   }
 }
 
+/* Accessibility: Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }
