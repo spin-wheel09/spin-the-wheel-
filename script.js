@@ -1,403 +1,231 @@
-// RAJYA ROOFTOP - SPIN & WIN
-// Weighted prize wheel: total probability = 100%
+document.addEventListener("DOMContentLoaded", () => {
+  /* =========================================
+     CONFIGURATION & DATA
+     ========================================= */
+  const PRIZES = [
+    { name: "10% OFF", weight: 1, color: "#e6b96e", textColor: "#392419" },
+    { name: "BETTER LUCK NEXT TIME", weight: 40 / 3, color: "#f5dfbd", textColor: "#573c27" },
+    { name: "FREE DESSERT", weight: 13, color: "#75452c", textColor: "#fff8ed" },
+    { name: "BETTER LUCK NEXT TIME", weight: 40 / 3, color: "#ead0a7", textColor: "#573c27" },
+    { name: "250 ML COKE / SPRITE", weight: 13, color: "#a96535", textColor: "#fff8ed" },
+    { name: "BETTER LUCK NEXT TIME", weight: 40 / 3, color: "#f5dfbd", textColor: "#573c27" },
+    { name: "RE-SPIN", weight: 33, color: "#8c5936", textColor: "#fff8ed" }
+  ];
 
-const prizes = [
-  {
-    name: "10% OFF",
-    weight: 1,
-    color: "#e6b96e",
-    textColor: "#392419"
-  },
-  {
-    name: "BETTER LUCK NEXT TIME",
-    weight: 40 / 3,
-    color: "#f5dfbd",
-    textColor: "#573c27"
-  },
-  {
-    name: "FREE DESSERT",
-    weight: 13,
-    color: "#75452c",
-    textColor: "#fff8ed"
-  },
-  {
-    name: "BETTER LUCK NEXT TIME",
-    weight: 40 / 3,
-    color: "#ead0a7",
-    textColor: "#573c27"
-  },
-  {
-    name: "250 ML COKE / SPRITE",
-    weight: 13,
-    color: "#a96535",
-    textColor: "#fff8ed"
-  },
-  {
-    name: "BETTER LUCK NEXT TIME",
-    weight: 40 / 3,
-    color: "#f5dfbd",
-    textColor: "#573c27"
-  },
-  {
-    name: "RE-SPIN",
-    weight: 33,
-    color: "#8c5936",
-    textColor: "#fff8ed"
-  }
-];
+  const TOTAL_WEIGHT = PRIZES.reduce((sum, prize) => sum + prize.weight, 0);
+  const SPIN_DURATION_MS = 5600;
 
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
+  /* =========================================
+     DOM ELEMENTS
+     ========================================= */
+  const canvas = document.getElementById("wheel");
+  const ctx = canvas.getContext("2d");
+  const spinBtn = document.getElementById("spinBtn");
+  
+  const modal = document.getElementById("winnerModal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalDescription = document.getElementById("modalDescription");
+  const prizeNameEl = document.getElementById("prizeName");
+  const claimText = document.getElementById("claimText");
+  const modalIcon = document.getElementById("modalIcon");
+  const modalButton = document.getElementById("modalButton");
 
-const spinBtn = document.getElementById("spinBtn");
-const modal = document.getElementById("winnerModal");
-const modalButton = document.getElementById("modalButton");
+  /* =========================================
+     APP STATE
+     ========================================= */
+  let currentRotation = 0;
+  let isSpinning = false;
+  let canRespin = false;
 
-const totalWeight = prizes.reduce(
-  (sum, prize) => sum + prize.weight,
-  0
-);
+  /* =========================================
+     CANVAS RENDERING
+     ========================================= */
+  function drawWheel() {
+    const center = canvas.width / 2;
+    const radius = center - 12;
+    let cumulativeWeight = 0;
 
-let rotation = 0;
-let spinning = false;
-let canRespin = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// DRAW WHEEL
+    PRIZES.forEach((prize) => {
+      const startAngle = -Math.PI / 2 + (cumulativeWeight / TOTAL_WEIGHT) * Math.PI * 2;
+      const endAngle = startAngle + (prize.weight / TOTAL_WEIGHT) * Math.PI * 2;
+      const middleAngle = (startAngle + endAngle) / 2;
 
-function drawWheel() {
+      // 1. Draw Segment Background
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, startAngle, endAngle);
+      ctx.closePath();
+      
+      ctx.fillStyle = prize.color;
+      ctx.fill();
+      ctx.strokeStyle = "#fff0dc";
+      ctx.lineWidth = 4;
+      ctx.stroke();
 
-  const center = canvas.width / 2;
-  const radius = center - 12;
+      // 2. Draw Text (Skip if segment is too narrow)
+      if (prize.weight >= 5) {
+        drawSegmentText(prize, center, radius, middleAngle);
+      }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cumulativeWeight += prize.weight;
+    });
 
-  let cumulative = 0;
-
-  prizes.forEach((prize) => {
-
-    const startAngle =
-      -Math.PI / 2 +
-      (cumulative / totalWeight) * Math.PI * 2;
-
-    const endAngle =
-      startAngle +
-      (prize.weight / totalWeight) * Math.PI * 2;
-
-    const middleAngle = (startAngle + endAngle) / 2;
-
-    // Draw segment
-
+    // 3. Draw Outer Wheel Border
     ctx.beginPath();
-    ctx.moveTo(center, center);
-
-    ctx.arc(
-      center,
-      center,
-      radius,
-      startAngle,
-      endAngle
-    );
-
-    ctx.closePath();
-
-    ctx.fillStyle = prize.color;
-    ctx.fill();
-
-    ctx.strokeStyle = "#fff0dc";
-    ctx.lineWidth = 4;
+    ctx.arc(center, center, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "#d4a66a";
+    ctx.lineWidth = 10;
     ctx.stroke();
+  }
 
-    // Draw text only when the segment is large enough
+  function drawSegmentText(prize, center, radius, middleAngle) {
+    ctx.save();
+    ctx.translate(center, center);
+    ctx.rotate(middleAngle);
+    
+    ctx.fillStyle = prize.textColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "bold 23px Arial";
 
-    if (prize.weight >= 5) {
+    const words = prize.name.split(" ");
+    const lines = [];
+    let currentLine = "";
+    const maxLineWidth = radius * 0.53;
 
-      ctx.save();
+    // Word wrapping logic
+    words.forEach(word => {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      if (ctx.measureText(testLine).width > maxLineWidth) {
+        if (currentLine) lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    });
+    if (currentLine) lines.push(currentLine);
 
-      ctx.translate(center, center);
-      ctx.rotate(middleAngle);
+    // Calculate vertical positioning to center the text block
+    const textRadius = radius * 0.67;
+    const lineHeight = 28;
+    const startY = -textRadius - ((lines.length - 1) * lineHeight) / 2;
 
-      ctx.fillStyle = prize.textColor;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
+    lines.forEach((line, index) => {
+      ctx.fillText(line, 0, startY + (index * lineHeight));
+    });
 
-      const fontSize = 23;
+    ctx.restore();
+  }
 
-      ctx.font = `bold ${fontSize}px Arial`;
+  /* =========================================
+     GAME LOGIC
+     ========================================= */
+  function selectPrizeIndex() {
+    const random = Math.random() * TOTAL_WEIGHT;
+    let cumulative = 0;
 
-      const words = prize.name.split(" ");
-      const lines = [];
-      let line = "";
+    for (let i = 0; i < PRIZES.length; i++) {
+      cumulative += PRIZES[i].weight;
+      if (random < cumulative) return i;
+    }
+    return PRIZES.length - 1; // Fallback
+  }
 
-      words.forEach(word => {
+  function handleSpin() {
+    if (isSpinning) return;
+    isSpinning = true;
 
-        const test = line
-          ? line + " " + word
-          : word;
+    // Update UI
+    spinBtn.disabled = true;
+    spinBtn.textContent = "SPINNING...";
 
-        if (
-          ctx.measureText(test).width >
-          radius * 0.53
-        ) {
+    const selectedIndex = selectPrizeIndex();
+    const selectedPrize = PRIZES[selectedIndex];
 
-          if (line) lines.push(line);
-          line = word;
-
-        } else {
-
-          line = test;
-
-        }
-
-      });
-
-      if (line) lines.push(line);
-
-      const textRadius = radius * 0.67;
-      const lineHeight = 28;
-
-      const firstY =
-        -textRadius -
-        ((lines.length - 1) * lineHeight) / 2;
-
-      lines.forEach((text, index) => {
-
-        ctx.fillText(
-          text,
-          0,
-          firstY + index * lineHeight
-        );
-
-      });
-
-      ctx.restore();
-
+    // Calculate angles to stop perfectly in the center of the winning slice
+    let cumulativePrecedingWeight = 0;
+    for (let i = 0; i < selectedIndex; i++) {
+      cumulativePrecedingWeight += PRIZES[i].weight;
     }
 
-    cumulative += prize.weight;
+    const segmentCenter = -90 + ((cumulativePrecedingWeight + selectedPrize.weight / 2) / TOTAL_WEIGHT) * 360;
+    const targetRotation = ((-90 - segmentCenter) % 360 + 360) % 360;
+    const normalizedCurrent = ((currentRotation % 360) + 360) % 360;
+    const adjustment = (targetRotation - normalizedCurrent + 360) % 360;
+    
+    // Add 5 to 7 full rotations for the spin effect
+    const extraSpins = 360 * (5 + Math.floor(Math.random() * 3));
+    currentRotation += extraSpins + adjustment;
 
+    // Apply hardware-accelerated CSS transition
+    canvas.style.transition = `transform ${SPIN_DURATION_MS / 1000}s cubic-bezier(0.12, 0.75, 0.12, 1)`;
+    canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+    // Wait for transition to finish
+    setTimeout(() => {
+      isSpinning = false;
+      spinBtn.disabled = false;
+      spinBtn.textContent = "SPIN AGAIN";
+      showResult(selectedPrize);
+    }, SPIN_DURATION_MS);
+  }
+
+  /* =========================================
+     UI & MODAL MANAGEMENT
+     ========================================= */
+  function showResult(prize) {
+    prizeNameEl.textContent = prize.name;
+    canRespin = false;
+
+    if (prize.name === "BETTER LUCK NEXT TIME") {
+      modalIcon.textContent = "😊";
+      modalTitle.textContent = "THANK YOU FOR PLAYING!";
+      modalDescription.textContent = "This time luck was not on your side.";
+      claimText.textContent = "Thank you for visiting Rajya Rooftop. Enjoy your day!";
+      modalButton.textContent = "CLOSE";
+    } 
+    else if (prize.name === "RE-SPIN") {
+      modalIcon.textContent = "🎡";
+      modalTitle.textContent = "LUCKY YOU!";
+      modalDescription.textContent = "You have won another chance!";
+      claimText.textContent = "Spin again to discover your surprise.";
+      modalButton.textContent = "SPIN AGAIN";
+      canRespin = true;
+    } 
+    else {
+      modalIcon.textContent = "🎉";
+      modalTitle.textContent = "CONGRATULATIONS!";
+      modalDescription.textContent = "You have won a special café treat!";
+      claimText.textContent = "Show this screen to our staff to claim your prize.";
+      modalButton.textContent = "CLAIM MY PRIZE";
+    }
+
+    modal.classList.add("active"); // Uses 'active' to match standard UI patterns
+  }
+
+  function closeModal() {
+    modal.classList.remove("active");
+    if (canRespin) {
+      canRespin = false;
+      setTimeout(handleSpin, 350); // Slight delay for smoother UX
+    }
+  }
+
+  /* =========================================
+     EVENT LISTENERS & INITIALIZATION
+     ========================================= */
+  spinBtn.addEventListener("click", handleSpin);
+  modalButton.addEventListener("click", closeModal);
+  
+  // Close modal when clicking outside the card
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
   });
 
-  // Outer wheel border
-
-  ctx.beginPath();
-
-  ctx.arc(
-    center,
-    center,
-    radius,
-    0,
-    Math.PI * 2
-  );
-
-  ctx.strokeStyle = "#d4a66a";
-  ctx.lineWidth = 10;
-  ctx.stroke();
-
-}
-
-drawWheel();
-
-
-// WEIGHTED RANDOM SELECTION
-
-function selectPrize() {
-
-  const random = Math.random() * totalWeight;
-
-  let cumulative = 0;
-
-  for (let i = 0; i < prizes.length; i++) {
-
-    cumulative += prizes[i].weight;
-
-    if (random < cumulative) {
-      return i;
-    }
-
-  }
-
-  return prizes.length - 1;
-
-}
-
-
-// SPIN WHEEL
-
-function spinWheel() {
-
-  if (spinning) return;
-
-  spinning = true;
-
-  spinBtn.disabled = true;
-  spinBtn.textContent = "SPINNING...";
-
-  const selectedIndex = selectPrize();
-
-  let cumulative = 0;
-
-  for (let i = 0; i < selectedIndex; i++) {
-    cumulative += prizes[i].weight;
-  }
-
-  const selected = prizes[selectedIndex];
-
-  // Find the center of the winning segment
-
-  const segmentCenter =
-    -90 +
-    ((cumulative + selected.weight / 2) /
-      totalWeight) * 360;
-
-  // Position the winning segment at the top pointer
-
-  const targetRotation =
-    ((-90 - segmentCenter) % 360 + 360) % 360;
-
-  const currentRotation =
-    ((rotation % 360) + 360) % 360;
-
-  const adjustment =
-    (targetRotation - currentRotation + 360) % 360;
-
-  // Five to seven complete rotations
-
-  const extraSpins =
-    360 * (5 + Math.floor(Math.random() * 3));
-
-  rotation += extraSpins + adjustment;
-
-  canvas.style.transition =
-    "transform 5.5s cubic-bezier(0.12, 0.75, 0.12, 1)";
-
-  canvas.style.transform =
-    `rotate(${rotation}deg)`;
-
-  setTimeout(() => {
-
-    spinning = false;
-
-    spinBtn.disabled = false;
-    spinBtn.textContent = "SPIN AGAIN";
-
-    showResult(selected);
-
-  }, 5600);
-
-}
-
-
-// WINNER POPUP
-
-function showResult(prize) {
-
-  const title =
-    document.getElementById("modalTitle");
-
-  const description =
-    document.getElementById("modalDescription");
-
-  const prizeName =
-    document.getElementById("prizeName");
-
-  const claimText =
-    document.getElementById("claimText");
-
-  const icon =
-    document.getElementById("modalIcon");
-
-  prizeName.textContent = prize.name;
-
-  canRespin = false;
-
-  if (prize.name === "BETTER LUCK NEXT TIME") {
-
-    icon.textContent = "😊";
-
-    title.textContent = "THANK YOU FOR PLAYING!";
-
-    description.textContent =
-      "This time luck was not on your side.";
-
-    claimText.textContent =
-      "Thank you for visiting Rajya Rooftop. Enjoy your day!";
-
-    modalButton.textContent = "CLOSE";
-
-  }
-
-  else if (prize.name === "RE-SPIN") {
-
-    icon.textContent = "🎡";
-
-    title.textContent = "LUCKY YOU!";
-
-    description.textContent =
-      "You have won another chance!";
-
-    claimText.textContent =
-      "Spin again to discover your surprise.";
-
-    modalButton.textContent = "SPIN AGAIN";
-
-    canRespin = true;
-
-  }
-
-  else {
-
-    icon.textContent = "🎉";
-
-    title.textContent = "CONGRATULATIONS!";
-
-    description.textContent =
-      "You have won a special café treat!";
-
-    claimText.textContent =
-      "Show this screen to our staff to claim your prize.";
-
-    modalButton.textContent = "CLAIM MY PRIZE";
-
-  }
-
-  modal.classList.add("show");
-
-}
-
-
-// POPUP BUTTON
-
-modalButton.addEventListener("click", () => {
-
-  modal.classList.remove("show");
-
-  if (canRespin) {
-
-    canRespin = false;
-
-    setTimeout(() => {
-      spinWheel();
-    }, 350);
-
-  }
-
-});
-
-
-// SPIN BUTTON
-
-spinBtn.addEventListener("click", spinWheel);
-
-
-// CLOSE POPUP BY CLICKING OUTSIDE
-
-modal.addEventListener("click", (event) => {
-
-  if (event.target === modal) {
-
-    modal.classList.remove("show");
-    canRespin = false;
-
-  }
-
+  // Init
+  drawWheel();
 });
